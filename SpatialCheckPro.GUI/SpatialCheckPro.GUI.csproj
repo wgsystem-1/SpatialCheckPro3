@@ -49,8 +49,8 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="GDAL" Version="3.10.3" />
-    <PackageReference Include="GDAL.Native" Version="3.10.3" />
+    <PackageReference Include="MaxRev.Gdal.Core" Version="3.10.0.306" />
+    <PackageReference Include="MaxRev.Gdal.WindowsRuntime.Minimal" Version="3.10.0.306" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
@@ -106,23 +106,7 @@
     <Compile Remove="Services\ErrorRenderingService.cs" />
   </ItemGroup>
 
-  <!-- GDAL Native DLL 복사 설정 -->
-  <Target Name="CopyGdalNativeFiles" AfterTargets="Build">
-    <ItemGroup>
-      <GdalNativeFiles Include="$(NuGetPackageRoot)gdal.native\3.10.3\build\gdal\x64\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(GdalNativeFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
-    <Message Text="GDAL Native 파일 복사 완료" Importance="high" />
-  </Target>
-
-  <!-- Publish 시에도 GDAL Native DLL 복사 -->
-  <Target Name="CopyGdalNativeFilesOnPublish" AfterTargets="Publish">
-    <ItemGroup>
-      <GdalNativeFiles Include="$(NuGetPackageRoot)gdal.native\3.10.3\build\gdal\x64\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(GdalNativeFiles)" DestinationFolder="$(PublishDir)" SkipUnchangedFiles="true" />
-    <Message Text="GDAL Native 파일을 배포 디렉토리에 복사 완료" Importance="high" />
-  </Target>
+  <!-- MaxRev.Gdal 패키지가 네이티브 라이브러리를 자동으로 처리합니다 -->
 
   <!-- Config 파일 복사 설정 -->
   <ItemGroup>
