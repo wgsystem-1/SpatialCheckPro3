@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using MaxRev.Gdal.Core;
 using OSGeo.GDAL;
 using OSGeo.OGR;
 using OSGeo.OSR;
@@ -81,39 +82,19 @@ namespace SpatialCheckPro.GUI.Services
 
                     try
                     {
-                        _logger.LogInformation("GDAL 3.11.3 초기화 시작...");
+                        _logger.LogInformation("GDAL 3.10.0 (MaxRev.Gdal.Core) 초기화 시작...");
 
-                        // PROJ 라이브러리 경로 설정 (가장 먼저!)
+                        // MaxRev.Gdal.Core 초기화 - 모든 설정을 자동으로 처리
+                        GdalBase.ConfigureAll();
+                        _logger.LogInformation("MaxRev.Gdal.Core ConfigureAll() 완료");
+
+                        // PROJ 라이브러리 경로 설정 (추가 설정이 필요한 경우)
                         SetupProjLibrary();
 
-                        // 전체 환경 설정 (x64 경로 포함)
+                        // 전체 환경 설정 (추가 설정이 필요한 경우)
                         ConfigureEnvironment();
 
-                        // GDAL 초기화
-                        try
-                        {
-                            Gdal.AllRegister();
-                            Ogr.RegisterAll();
-                            _logger.LogInformation("GDAL/OGR 초기화 성공");
-                        }
-                        catch (Exception gdalEx)
-                        {
-                            _logger.LogError(gdalEx, "GDAL 초기화 실패 - 경로 재설정 시도");
-                            
-                            // 메인 bin 디렉토리도 PATH에 추가
-                            var binPath = AppDomain.CurrentDomain.BaseDirectory;
-                            var currentPath = Environment.GetEnvironmentVariable("PATH");
-                            if (!currentPath.Contains(binPath))
-                            {
-                                Environment.SetEnvironmentVariable("PATH", binPath + ";" + currentPath);
-                                _logger.LogDebug("메인 bin 디렉토리 PATH 추가: {Path}", binPath);
-                            }
-
-                            // 재시도
-                            Gdal.AllRegister();
-                            Ogr.RegisterAll();
-                            _logger.LogInformation("GDAL/OGR 초기화 성공 (재시도)");
-                        }
+                        _logger.LogInformation("GDAL/OGR 초기화 성공");
 
                         Gdal.UseExceptions();
                         Ogr.UseExceptions();
