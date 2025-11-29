@@ -1,0 +1,243 @@
+<Window x:Class="SpatialCheckPro.GUI.Views.ShpConvertDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="FileGDB → Shapefile 변환" 
+        Height="420" Width="600"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F8FAFC">
+
+    <Window.Resources>
+        <!-- 버튼 스타일 -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1D4ED8"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#94A3B8"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#E2E8F0"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#CBD5E1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BrowseButton" TargetType="Button">
+            <Setter Property="Background" Value="#64748B"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="4" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#475569"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 타이틀 -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="FileGDB → Shapefile 변환" 
+                       FontSize="20" 
+                       FontWeight="Bold" 
+                       Foreground="#0F172A"/>
+            <TextBlock Text="File Geodatabase의 모든 레이어를 Shapefile 형식으로 변환합니다." 
+                       FontSize="13" 
+                       Foreground="#64748B" 
+                       Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <!-- FGDB 경로 선택 -->
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="소스 FileGDB 경로" 
+                       FontSize="13" 
+                       FontWeight="SemiBold" 
+                       Foreground="#334155" 
+                       Margin="0,0,0,6"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="SourcePathTextBox" 
+                         Grid.Column="0" 
+                         Height="36" 
+                         Padding="10,8" 
+                         FontSize="13"
+                         BorderBrush="#CBD5E1"
+                         BorderThickness="1"
+                         IsReadOnly="True"
+                         Background="White"/>
+                <Button Grid.Column="1" 
+                        Content="찾아보기..." 
+                        Style="{StaticResource BrowseButton}" 
+                        Margin="8,0,0,0"
+                        Click="BrowseSource_Click"/>
+            </Grid>
+        </Grid>
+
+        <!-- 저장 경로 선택 -->
+        <Grid Grid.Row="2" Margin="0,0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="출력 폴더 경로" 
+                       FontSize="13" 
+                       FontWeight="SemiBold" 
+                       Foreground="#334155" 
+                       Margin="0,0,0,6"/>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="OutputPathTextBox" 
+                         Grid.Column="0" 
+                         Height="36" 
+                         Padding="10,8" 
+                         FontSize="13"
+                         BorderBrush="#CBD5E1"
+                         BorderThickness="1"
+                         IsReadOnly="True"
+                         Background="White"/>
+                <Button Grid.Column="1" 
+                        Content="찾아보기..." 
+                        Style="{StaticResource BrowseButton}" 
+                        Margin="8,0,0,0"
+                        Click="BrowseOutput_Click"/>
+            </Grid>
+        </Grid>
+
+        <!-- 진행률 -->
+        <Grid Grid.Row="3" Margin="0,0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+                <TextBlock Text="진행 상태: " 
+                           FontSize="13" 
+                           FontWeight="SemiBold" 
+                           Foreground="#334155"/>
+                <TextBlock x:Name="StatusText" 
+                           Text="대기 중" 
+                           FontSize="13" 
+                           Foreground="#64748B"/>
+            </StackPanel>
+            <ProgressBar x:Name="ConvertProgressBar" 
+                         Grid.Row="1" 
+                         Height="8" 
+                         Minimum="0" 
+                         Maximum="100" 
+                         Value="0"
+                         Foreground="#2563EB"
+                         Background="#E2E8F0"/>
+        </Grid>
+
+        <!-- 레이어 정보 -->
+        <Border Grid.Row="4" 
+                Background="#F1F5F9" 
+                CornerRadius="6" 
+                Padding="12" 
+                Margin="0,0,0,20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="60">
+                <TextBlock x:Name="LayerInfoText" 
+                           Text="소스 FileGDB를 선택하면 레이어 정보가 표시됩니다." 
+                           FontSize="12" 
+                           Foreground="#64748B"
+                           TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </Border>
+
+        <!-- 버튼 -->
+        <StackPanel Grid.Row="5" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right"
+                    Margin="0,0,0,8">
+            <Button x:Name="ConvertButton" 
+                    Content="변환 실행" 
+                    Style="{StaticResource PrimaryButton}" 
+                    Width="120"
+                    Height="40"
+                    IsEnabled="False"
+                    Click="Convert_Click"/>
+            <Button Content="닫기" 
+                    Style="{StaticResource SecondaryButton}" 
+                    Width="100"
+                    Height="40"
+                    Margin="12,0,0,0"
+                    Click="Close_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
+
